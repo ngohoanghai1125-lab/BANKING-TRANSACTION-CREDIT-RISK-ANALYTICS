@@ -3,7 +3,7 @@
 * Database & SQL Engineering: PostgreSQL, DBeaver (DDL Table Creation, Multi-table Joins, Aggregated Views)
 * Data Analytics & Risk Modeling: PostgreSQL (Conditional Aggregations, Window Functions, Credit Risk Segmentation)
 * Data Visualization & Dashboarding: Power BI Desktop (Import Mode, Custom Themes, Interactive Slicers)
-* DAX Modeling: 3-Tier DAX Architecture (`_Measures` Table for Base, Diagnostic, and Risk Exposure Metrics)
+* DAX Modeling: 3-Tier DAX Architecture (_Measures Table for Base, Diagnostic, and Risk Exposure Metrics)
 
 
 
@@ -20,9 +20,9 @@
 
 ---
 
-## 3-Tier DAX Architecture (`_Measures`)
+## 3-Tier DAX Architecture (_Measures)
 
-All measures were systematically developed and isolated within a dedicated `_Measures` table following a 3-Tier DAX Architecture:
+All measures were systematically developed and isolated within a dedicated _Measures table following a 3-Tier DAX Architecture:
 
 * Tier 1: Base Measures
    Total Volume = SUM('v_fact_transactions_analytics'[TransactionAmount])
