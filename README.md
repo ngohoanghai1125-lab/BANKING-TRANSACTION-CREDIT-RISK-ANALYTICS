@@ -10,12 +10,12 @@
 ## Data Cleaning, SQL Engineering & Data Mart Design
 
 ### Key Database & Preprocessing Steps (PostgreSQL):
-* Schema Definition & DDL Creation: Engineered relational schemas with explicit Primary/Foreign Key constraints across dimension tables (`DimCustomer`, `DimAccount`, `DimProductCategory`, `DimProductSubCategory`, `DimProduct`) and transaction fact table (`FactTransaction`).
+* Schema Definition & DDL Creation: Engineered relational schemas with explicit Primary/Foreign Key constraints across dimension tables (DimCustomer, DimAccount, DimProductCategory, DimProductSubCategory, DimProduct) and transaction fact table (FactTransaction).
 * Analytical Data Mart Views:
-  * `v_fact_transactions_analytics`: Integrated transaction logs with account and customer demographics via `LEFT JOIN` to optimize Power BI Import Mode query performance.
-  * `v_customer_credit_risk`: Aggregated total credit balance per customer and computed dynamic credit risk tiers (`High Risk (Negative Balance)` vs. `Normal Risk`).
+  * v_fact_transactions_analytics: Integrated transaction logs with account and customer demographics via LEFT JOIN to optimize Power BI Import Mode query performance.
+  * v_customer_credit_risk: Aggregated total credit balance per customer and computed dynamic credit risk tiers (High Risk (Negative Balance) vs. Normal Risk).
 * Risk Feature Engineering:
-  * Categorized account balances (`SUM(CASE WHEN AccountType = 'Credit' THEN Balance ELSE 0 END)`).
+  * Categorized account balances (SUM(CASE WHEN AccountType = 'Credit' THEN Balance ELSE 0 END)).
   * Flagged credit accounts with cumulative balance < $0 for proactive loss monitoring.
 
 ---
@@ -25,18 +25,18 @@
 All measures were systematically developed and isolated within a dedicated `_Measures` table following a 3-Tier DAX Architecture:
 
 * Tier 1: Base Measures
-  * `Total Volume` = `SUM('v_fact_transactions_analytics'[TransactionAmount])`
-  * `Total Txns` = `COUNTROWS('v_fact_transactions_analytics')`
-  * `Total Credit (Inflow)` = `CALCULATE([Total Volume], 'v_fact_transactions_analytics'[TransactionType] = "Credit")`
-  * `Total Debit (Outflow)` = `CALCULATE([Total Volume], 'v_fact_transactions_analytics'[TransactionType] = "Debit")`
+   Total Volume = SUM('v_fact_transactions_analytics'[TransactionAmount])
+  * Total Txns = COUNTROWS('v_fact_transactions_analytics')
+  * Total Credit (Inflow) = CALCULATE([Total Volume], 'v_fact_transactions_analytics'[TransactionType] = "Credit")
+  * Total Debit (Outflow) = CALCULATE([Total Volume], 'v_fact_transactions_analytics'[TransactionType] = "Debit")
 
 * Tier 2: Diagnostic & Operational Metrics
-  * `Net Cash Flow` = `[Total Credit] - [Total Debit]`
-  * `Failed Txns` = `CALCULATE([Total Txns], 'v_fact_transactions_analytics'[TransactionStatus] = "Failed")`
-  * `Failed Rate (%)` = `DIVIDE([Failed Txns], [Total Txns], 0)`
+  * Net Cash Flow = [Total Credit] - [Total Debit]
+  * Failed Txns = CALCULATE([Total Txns], 'v_fact_transactions_analytics'[TransactionStatus] = "Failed")
+  * Failed Rate (%) = `DIVIDE([Failed Txns], [Total Txns], 0)
 
 * Tier 3: Risk Exposure Metrics
-  * `Total Negative Balance` = `CALCULATE(SUM('v_customer_credit_risk'[TotalCreditBalance]), 'v_customer_credit_risk'[TotalCreditBalance] < 0)`
+  * Total Negative Balance = CALCULATE(SUM('v_customer_credit_risk'[TotalCreditBalance]), 'v_customer_credit_risk'[TotalCreditBalance] < 0)
 
 ---
 
